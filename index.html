@@ -78,6 +78,23 @@
             background: #e0e0e0;
             outline: none;
         }
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .next-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+        .next-button:hover {
+            background: #357abd;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +117,9 @@
         <div class="right-column" id="right-column">
             <!-- Выбранные места будут добавляться сюда -->
         </div>
+    </div>
+    <div class="buttons">
+        <button class="next-button" onclick="nextStep()">Далее</button>
     </div>
 
     <script>
@@ -189,6 +209,11 @@
             categoryTitle.innerHTML = categoryTitle.innerHTML.includes('▼') ?
                 categoryTitle.innerHTML.replace('▼', '▲') :
                 categoryTitle.innerHTML.replace('▲', '▼');
+        }
+
+        function nextStep() {
+            const leftColumn = document.getElementById('left-column');
+            leftColumn.style.display = 'none';
         }
     </script>
 </body>
