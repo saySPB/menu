@@ -44,6 +44,33 @@
             color: #4a90e2;
             font-size: 1.5em;
         }
+        .category {
+            margin-bottom: 15px;
+        }
+        .category-title {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .category-title:hover {
+            background: #e0e0e0;
+        }
+        .category-content {
+            display: none;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .category-content label {
+            display: block;
+            margin: 5px 0;
+        }
         .checkbox {
             margin-right: 10px;
         }
@@ -61,23 +88,6 @@
         .add-column:hover, .remove-column:hover {
             background: #357abd;
         }
-        .editable {
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-        .editable:hover {
-            background: #f0f0f0;
-        }
-        .editable:focus {
-            background: #e0e0e0;
-            outline: none;
-        }
-        label {
-            display: block;
-            margin: 10px 0;
-        }
         .buttons {
             text-align: center;
             margin: 20px 0;
@@ -90,14 +100,50 @@
         <!-- Пример колонки -->
         <div class="column">
             <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Закуска: РЫБНАЯ / МЯСНАЯ</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячее: КУРА / МЯСО / РЫБА</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Десерт: ДА / НЕТ</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Аперитив: Вода в/г / с/г / кода / спрайт / явложо / апельсин / томат / + лимон / специи / лёд</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Алкоголь: + лёд ИгРИСТОЕ / БЕЛОЕ / КРАСНОЕ / ВИСКИ / ВОДКА / КОНЬЯК</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячие напитки: Чай Черный / зеленый / кофе / + лимон / молоко</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Будить / не будить</span></label>
-            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Сразу / Полюзие</span></label>
+            <div class="category">
+                <div class="category-title" onclick="toggleCategory(this)">Закуска ▼</div>
+                <div class="category-content">
+                    <label><input type="checkbox" class="checkbox"> Рыбная</label>
+                    <label><input type="checkbox" class="checkbox"> Мясная</label>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title" onclick="toggleCategory(this)">Горячее ▼</div>
+                <div class="category-content">
+                    <label><input type="checkbox" class="checkbox"> Кура</label>
+                    <label><input type="checkbox" class="checkbox"> Мясо</label>
+                    <label><input type="checkbox" class="checkbox"> Рыба</label>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title" onclick="toggleCategory(this)">Аперитив ▼</div>
+                <div class="category-content">
+                    <label><input type="checkbox" class="checkbox"> Вода в/г</label>
+                    <label><input type="checkbox" class="checkbox"> Вода с/г</label>
+                    <label><input type="checkbox" class="checkbox"> Спрайт</label>
+                    <label><input type="checkbox" class="checkbox"> Апельсин</label>
+                    <label><input type="checkbox" class="checkbox"> Томат</label>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title" onclick="toggleCategory(this)">Алкоголь ▼</div>
+                <div class="category-content">
+                    <label><input type="checkbox" class="checkbox"> Игристое</label>
+                    <label><input type="checkbox" class="checkbox"> Белое</label>
+                    <label><input type="checkbox" class="checkbox"> Красное</label>
+                    <label><input type="checkbox" class="checkbox"> Виски</label>
+                    <label><input type="checkbox" class="checkbox"> Водка</label>
+                    <label><input type="checkbox" class="checkbox"> Коньяк</label>
+                </div>
+            </div>
+            <div class="category">
+                <div class="category-title" onclick="toggleCategory(this)">Горячие напитки ▼</div>
+                <div class="category-content">
+                    <label><input type="checkbox" class="checkbox"> Чай черный</label>
+                    <label><input type="checkbox" class="checkbox"> Чай зеленый</label>
+                    <label><input type="checkbox" class="checkbox"> Кофе</label>
+                </div>
+            </div>
         </div>
     </div>
     <div class="buttons">
@@ -106,20 +152,64 @@
     </div>
 
     <script>
+        function toggleCategory(categoryTitle) {
+            const content = categoryTitle.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+            categoryTitle.innerHTML = categoryTitle.innerHTML.includes('▼') ?
+                categoryTitle.innerHTML.replace('▼', '▲') :
+                categoryTitle.innerHTML.replace('▲', '▼');
+        }
+
         function addColumn() {
             const container = document.getElementById('columns-container');
             const newColumn = document.createElement('div');
             newColumn.className = 'column';
             newColumn.innerHTML = `
                 <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Закуска: РЫБНАЯ / МЯСНАЯ</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячее: КУРА / МЯСО / РЫБА</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Десерт: ДА / НЕТ</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Аперитив: Вода в/г / с/г / кода / спрайт / явложо / апельсин / томат / + лимон / специи / лёд</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Алкоголь: + лёд ИгРИСТОЕ / БЕЛОЕ / КРАСНОЕ / ВИСКИ / ВОДКА / КОНЬЯК</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячие напитки: Чай Черный / зеленый / кофе / + лимон / молоко</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Будить / не будить</span></label>
-                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Сразу / Полюзие</span></label>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">Закуска ▼</div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> Рыбная</label>
+                        <label><input type="checkbox" class="checkbox"> Мясная</label>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">Горячее ▼</div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> Кура</label>
+                        <label><input type="checkbox" class="checkbox"> Мясо</label>
+                        <label><input type="checkbox" class="checkbox"> Рыба</label>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">Аперитив ▼</div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> Вода в/г</label>
+                        <label><input type="checkbox" class="checkbox"> Вода с/г</label>
+                        <label><input type="checkbox" class="checkbox"> Спрайт</label>
+                        <label><input type="checkbox" class="checkbox"> Апельсин</label>
+                        <label><input type="checkbox" class="checkbox"> Томат</label>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">Алкоголь ▼</div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> Игристое</label>
+                        <label><input type="checkbox" class="checkbox"> Белое</label>
+                        <label><input type="checkbox" class="checkbox"> Красное</label>
+                        <label><input type="checkbox" class="checkbox"> Виски</label>
+                        <label><input type="checkbox" class="checkbox"> Водка</label>
+                        <label><input type="checkbox" class="checkbox"> Коньяк</label>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">Горячие напитки ▼</div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> Чай черный</label>
+                        <label><input type="checkbox" class="checkbox"> Чай зеленый</label>
+                        <label><input type="checkbox" class="checkbox"> Кофе</label>
+                    </div>
+                </div>
             `;
             container.appendChild(newColumn);
         }
