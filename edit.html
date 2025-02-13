@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование заказов</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+            margin: 20px 0;
+            font-size: 2.5em;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px;
+        }
+        .seat {
+            padding: 10px;
+            margin: 5px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+        .seat:hover {
+            background: #e0e0e0;
+        }
+        .selected-seat {
+            background: #4a90e2;
+            color: white;
+        }
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .next-button, .reset-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+        .next-button:hover, .reset-button:hover {
+            background: #357abd;
+        }
+        .reset-button {
+            background: #ff4d4d;
+        }
+        .reset-button:hover {
+            background: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Редактирование заказов</h1>
+    <div class="main-container" id="main-container">
+        <!-- Выбранные места будут добавляться сюда -->
+    </div>
+    <div class="buttons">
+        <button class="next-button" id="next-button" onclick="nextStep()">Далее</button>
+        <button class="reset-button" id="reset-button" onclick="resetAll()">Сбросить все</button>
+    </div>
+
+    <script>
+        const mainContainer = document.getElementById('main-container');
+        const nextButton = document.getElementById('next-button');
+        const resetButton = document.getElementById('reset-button');
+
+        let selectedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+        let currentSeat = null;
+
+        // Отображение выбранных мест
+        selectedSeats.forEach(seat => {
+            const seatElement = document.createElement('div');
+            seatElement.className = 'seat';
+            seatElement.textContent = seat;
+
+            // Загружаем сохраненные данные для этого места
+            const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
+            if (savedMenu.fish || savedMenu.meat || savedMenu.dessert || savedMenu.alcohol || savedMenu.tea || savedMenu.coffee) {
+                seatElement.textContent += ' (Сохранено)';
+            }
+
+            seatElement.addEventListener('click', () => {
+                currentSeat = seat;
+                seatElement.classList.add('selected-seat');
+            });
+            mainContainer.appendChild(seatElement);
+        });
+
+        // Переход к следующему этапу
+        function nextStep() {
+            if (!currentSeat) {
+                alert('Пожалуйста, выберите место для редактирования!');
+                return;
+            }
+            // Сохраняем выбранное место в localStorage
+            localStorage.setItem('currentSeat', currentSeat);
+            // Переходим к следующему этапу
+            window.location.href = 'menu.html';
+        }
+
+        // Сброс всех сохранений и возврат на первую страницу
+        function resetAll() {
+            if (confirm('Вы уверены, что хотите сбросить все сохраненные данные? Это действие нельзя отменить.')) {
+                // Очищаем все данные в localStorage
+                localStorage.clear();
+                // Перенаправляем на первую страницу
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

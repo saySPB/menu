@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+            margin: 20px 0;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+        .menu {
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .menu:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .menu h3 {
+            margin-top: 0;
+            color: #4a90e2;
+            font-size: 1.8em;
+            font-weight: 500;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .menu h4 {
+            color: #333;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 20px 0 10px;
+        }
+        .menu label {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .menu label:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+        .menu input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .save-button {
+            padding: 12px 30px;
+            cursor: pointer;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .save-button:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+        }
+        .save-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <h1>Меню</h1>
+    <div class="menu" id="menu">
+        <h3>Место: <span id="seat-number"></span></h3>
+        <h4>Закупка</h4>
+        <label><input type="checkbox" class="checkbox" id="fish"> Рыбная</label>
+        <label><input type="checkbox" class="checkbox" id="meat"> Мясная</label>
+        <h4>Горячее</h4>
+        <label><input type="checkbox" class="checkbox" id="dessert"> Десерт</label>
+        <h4>Аперитив</h4>
+        <label><input type="checkbox" class="checkbox" id="alcohol"> Алкоголь</label>
+        <h4>Горячие напитки</h4>
+        <label><input type="checkbox" class="checkbox" id="tea"> Чай</label>
+        <label><input type="checkbox" class="checkbox" id="coffee"> Кофе</label>
+    </div>
+    <div class="buttons">
+        <button class="save-button" id="save-button" onclick="saveChanges()">Сохранить</button>
+    </div>
+
+    <script>
+        const seatNumberElement = document.getElementById('seat-number');
+        const saveButton = document.getElementById('save-button');
+        const fishCheckbox = document.getElementById('fish');
+        const meatCheckbox = document.getElementById('meat');
+        const dessertCheckbox = document.getElementById('dessert');
+        const alcoholCheckbox = document.getElementById('alcohol');
+        const teaCheckbox = document.getElementById('tea');
+        const coffeeCheckbox = document.getElementById('coffee');
+
+        // Получаем выбранное место из localStorage
+        const currentSeat = localStorage.getItem('currentSeat');
+        seatNumberElement.textContent = currentSeat;
+
+        // Загружаем сохраненные данные, если они есть
+        const savedMenu = JSON.parse(localStorage.getItem(`menu_${currentSeat}`)) || {};
+        fishCheckbox.checked = savedMenu.fish || false;
+        meatCheckbox.checked = savedMenu.meat || false;
+        dessertCheckbox.checked = savedMenu.dessert || false;
+        alcoholCheckbox.checked = savedMenu.alcohol || false;
+        teaCheckbox.checked = savedMenu.tea || false;
+        coffeeCheckbox.checked = savedMenu.coffee || false;
+
+        // Сохранение изменений
+        function saveChanges() {
+            const menuData = {
+                fish: fishCheckbox.checked,
+                meat: meatCheckbox.checked,
+                dessert: dessertCheckbox.checked,
+                alcohol: alcoholCheckbox.checked,
+                tea: teaCheckbox.checked,
+                coffee: coffeeCheckbox.checked,
+            };
+            // Сохраняем данные в localStorage
+            localStorage.setItem(`menu_${currentSeat}`, JSON.stringify(menuData));
+            alert('Изменения сохранены!');
+            // Возвращаемся к списку выбранных мест
+            window.location.href = 'edit.html';
+        }
+    </script>
+</body>
+</html>
