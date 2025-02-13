@@ -11,6 +11,9 @@
             padding: 0;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
             text-align: center;
@@ -18,79 +21,49 @@
             margin: 20px 0;
             font-size: 2.5em;
         }
-        .container {
+        .main-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 10px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px;
         }
-        .column {
+        .left-column, .right-column {
+            flex: 1;
             margin: 10px;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 300px;
             background: white;
+            border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .column:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .column h3 {
-            margin-top: 0;
-            color: #4a90e2;
-            font-size: 1.5em;
-        }
-        .category {
-            margin-bottom: 15px;
-        }
-        .category-title {
-            font-weight: bold;
-            cursor: pointer;
+        .seat {
             padding: 10px;
+            margin: 5px;
             background: #f0f0f0;
             border-radius: 5px;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s ease;
         }
-        .category-title:hover {
+        .seat:hover {
             background: #e0e0e0;
         }
-        .category-content {
+        .selected-seat {
+            background: #4a90e2;
+            color: white;
+        }
+        .menu {
             display: none;
             padding: 10px;
             background: #f9f9f9;
             border-radius: 5px;
+            margin-top: 10px;
         }
-        .category-content label {
+        .menu label {
             display: block;
             margin: 5px 0;
         }
         .checkbox {
             margin-right: 10px;
-        }
-        .add-column, .remove-column {
-            margin: 10px;
-            padding: 10px 20px;
-            cursor: pointer;
-            background: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: background 0.3s ease;
-        }
-        .add-column:hover, .remove-column:hover {
-            background: #357abd;
-        }
-        .buttons {
-            text-align: center;
-            margin: 20px 0;
         }
         .editable {
             cursor: pointer;
@@ -109,95 +82,49 @@
 </head>
 <body>
     <h1>Заказы</h1>
-    <div class="container" id="columns-container">
-        <!-- Пример колонки -->
-        <div class="column">
-            <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Закуска</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Рыбная</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Мясная</span></label>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Горячее</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Кура</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Мясо</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Рыба</span></label>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Десерт</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Да</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Нет</span></label>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Аперитив</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Вода в/г</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Вода с/г</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Спрайт</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Апельсин</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Томат</span></label>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Алкоголь</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Игристое</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Белое</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Красное</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Виски</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Водка</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Коньяк</span></label>
-                </div>
-            </div>
-            <div class="category">
-                <div class="category-title" onclick="toggleCategory(this)">
-                    <span class="editable" contenteditable="true">Горячие напитки</span> ▼
-                </div>
-                <div class="category-content">
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Чай черный</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Чай зеленый</span></label>
-                    <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Кофе</span></label>
-                </div>
-            </div>
+    <div class="main-container">
+        <div class="left-column" id="left-column">
+            <div class="seat" data-seat="1F">1F</div>
+            <div class="seat" data-seat="1D">1D</div>
+            <div class="seat" data-seat="2F">2F</div>
+            <div class="seat" data-seat="2D">2D</div>
+            <div class="seat" data-seat="3F">3F</div>
+            <div class="seat" data-seat="3D">3D</div>
+            <div class="seat" data-seat="1C">1C</div>
+            <div class="seat" data-seat="1A">1A</div>
+            <div class="seat" data-seat="2C">2C</div>
+            <div class="seat" data-seat="2A">2A</div>
+            <div class="seat" data-seat="3C">3C</div>
+            <div class="seat" data-seat="3A">3A</div>
         </div>
-    </div>
-    <div class="buttons">
-        <button class="add-column" onclick="addColumn()">Добавить колонку</button>
-        <button class="remove-column" onclick="removeColumn()">Удалить колонку</button>
+        <div class="right-column" id="right-column">
+            <!-- Выбранные места будут добавляться сюда -->
+        </div>
     </div>
 
     <script>
-        function toggleCategory(categoryTitle) {
-            const content = categoryTitle.nextElementSibling;
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
-            categoryTitle.innerHTML = categoryTitle.innerHTML.includes('▼') ?
-                categoryTitle.innerHTML.replace('▼', '▲') :
-                categoryTitle.innerHTML.replace('▲', '▼');
-        }
+        const leftColumn = document.getElementById('left-column');
+        const rightColumn = document.getElementById('right-column');
 
-        function addColumn() {
-            const container = document.getElementById('columns-container');
-            const newColumn = document.createElement('div');
-            newColumn.className = 'column';
-            newColumn.innerHTML = `
-                <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
+        leftColumn.addEventListener('click', (event) => {
+            if (event.target.classList.contains('seat')) {
+                const seat = event.target;
+                const seatNumber = seat.getAttribute('data-seat');
+                const selectedSeat = document.createElement('div');
+                selectedSeat.className = 'seat selected-seat';
+                selectedSeat.setAttribute('data-seat', seatNumber);
+                selectedSeat.textContent = seatNumber;
+                selectedSeat.addEventListener('click', () => openMenu(seatNumber));
+                rightColumn.appendChild(selectedSeat);
+                seat.remove();
+            }
+        });
+
+        function openMenu(seatNumber) {
+            const menu = document.createElement('div');
+            menu.className = 'menu';
+            menu.innerHTML = `
+                <h3 class="editable" contenteditable="true">Место: ${seatNumber}</h3>
                 <div class="category">
                     <div class="category-title" onclick="toggleCategory(this)">
                         <span class="editable" contenteditable="true">Закуска</span> ▼
@@ -253,14 +180,15 @@
                     </div>
                 </div>
             `;
-            container.appendChild(newColumn);
+            rightColumn.appendChild(menu);
         }
 
-        function removeColumn() {
-            const container = document.getElementById('columns-container');
-            if (container.lastChild) {
-                container.removeChild(container.lastChild);
-            }
+        function toggleCategory(categoryTitle) {
+            const content = categoryTitle.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+            categoryTitle.innerHTML = categoryTitle.innerHTML.includes('▼') ?
+                categoryTitle.innerHTML.replace('▼', '▲') :
+                categoryTitle.innerHTML.replace('▲', '▼');
         }
     </script>
 </body>
