@@ -82,7 +82,7 @@
             text-align: center;
             margin: 20px 0;
         }
-        .next-button {
+        .next-button, .save-button {
             padding: 10px 20px;
             cursor: pointer;
             background: #4a90e2;
@@ -92,8 +92,11 @@
             font-size: 1em;
             transition: background 0.3s ease;
         }
-        .next-button:hover {
+        .next-button:hover, .save-button:hover {
             background: #357abd;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -119,12 +122,18 @@
         </div>
     </div>
     <div class="buttons">
-        <button class="next-button" onclick="nextStep()">Далее</button>
+        <button class="next-button" id="next-button" onclick="nextStep()">Далее</button>
+        <button class="save-button hidden" id="save-button" onclick="saveChanges()">Сохранить</button>
     </div>
 
     <script>
         const leftColumn = document.getElementById('left-column');
         const rightColumn = document.getElementById('right-column');
+        const nextButton = document.getElementById('next-button');
+        const saveButton = document.getElementById('save-button');
+
+        let selectedSeats = [];
+        let currentSeat = null;
 
         leftColumn.addEventListener('click', (event) => {
             if (event.target.classList.contains('seat')) {
@@ -134,11 +143,44 @@
                 selectedSeat.className = 'seat selected-seat';
                 selectedSeat.setAttribute('data-seat', seatNumber);
                 selectedSeat.textContent = seatNumber;
-                selectedSeat.addEventListener('click', () => openMenu(seatNumber));
+                selectedSeat.addEventListener('click', () => selectSeat(seatNumber));
                 rightColumn.appendChild(selectedSeat);
                 seat.remove();
+                selectedSeats.push(seatNumber);
             }
         });
+
+        function selectSeat(seatNumber) {
+            currentSeat = seatNumber;
+            const seats = rightColumn.querySelectorAll('.seat');
+            seats.forEach(seat => {
+                if (seat.getAttribute('data-seat') === seatNumber) {
+                    seat.classList.add('selected-seat');
+                } else {
+                    seat.classList.remove('selected-seat');
+                }
+            });
+        }
+
+        function nextStep() {
+            if (selectedSeats.length === 0) {
+                alert('Пожалуйста, выберите хотя бы одно место!');
+                return;
+            }
+
+            if (currentSeat === null) {
+                // Первый этап: переход к выбору места для редактирования
+                leftColumn.style.display = 'none';
+                nextButton.textContent = 'Далее к меню';
+                currentSeat = selectedSeats[0];
+                selectSeat(currentSeat);
+            } else {
+                // Второй этап: переход к редактированию меню
+                openMenu(currentSeat);
+                nextButton.classList.add('hidden');
+                saveButton.classList.remove('hidden');
+            }
+        }
 
         function openMenu(seatNumber) {
             const menu = document.createElement('div');
@@ -162,6 +204,15 @@
                         <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Кура</span></label>
                         <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Мясо</span></label>
                         <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Рыба</span></label>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title" onclick="toggleCategory(this)">
+                        <span class="editable" contenteditable="true">Десерт</span> ▼
+                    </div>
+                    <div class="category-content">
+                        <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Да</span></label>
+                        <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Нет</span></label>
                     </div>
                 </div>
                 <div class="category">
@@ -200,6 +251,7 @@
                     </div>
                 </div>
             `;
+            rightColumn.innerHTML = '';
             rightColumn.appendChild(menu);
         }
 
@@ -211,9 +263,20 @@
                 categoryTitle.innerHTML.replace('▲', '▼');
         }
 
-        function nextStep() {
-            const leftColumn = document.getElementById('left-column');
-            leftColumn.style.display = 'none';
+        function saveChanges() {
+            alert('Изменения сохранены!');
+            rightColumn.innerHTML = '';
+            selectedSeats.forEach(seat => {
+                const selectedSeat = document.createElement('div');
+                selectedSeat.className = 'seat selected-seat';
+                selectedSeat.setAttribute('data-seat', seat);
+                selectedSeat.textContent = seat;
+                selectedSeat.addEventListener('click', () => selectSeat(seat));
+                rightColumn.appendChild(selectedSeat);
+            });
+            nextButton.classList.remove('hidden');
+            saveButton.classList.add('hidden');
+            currentSeat = null;
         }
     </script>
 </body>
