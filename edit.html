@@ -48,7 +48,7 @@
             text-align: center;
             margin: 20px 0;
         }
-        .next-button, .reset-button {
+        .next-button, .reset-button, .back-button {
             padding: 10px 20px;
             cursor: pointer;
             background: #4a90e2;
@@ -59,7 +59,7 @@
             transition: background 0.3s ease;
             margin: 5px;
         }
-        .next-button:hover, .reset-button:hover {
+        .next-button:hover, .reset-button:hover, .back-button:hover {
             background: #357abd;
         }
         .reset-button {
@@ -67,6 +67,12 @@
         }
         .reset-button:hover {
             background: #cc0000;
+        }
+        .back-button {
+            background: #888;
+        }
+        .back-button:hover {
+            background: #666;
         }
     </style>
 </head>
@@ -77,6 +83,7 @@
     </div>
     <div class="buttons">
         <button class="next-button" id="next-button" onclick="nextStep()">Далее</button>
+        <button class="back-button" id="back-button" onclick="goBack()">Назад</button>
         <button class="reset-button" id="reset-button" onclick="resetAll()">Сбросить все</button>
     </div>
 
@@ -84,6 +91,7 @@
         const mainContainer = document.getElementById('main-container');
         const nextButton = document.getElementById('next-button');
         const resetButton = document.getElementById('reset-button');
+        const backButton = document.getElementById('back-button');
 
         let selectedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
         let currentSeat = null;
@@ -117,6 +125,11 @@
             localStorage.setItem('currentSeat', currentSeat);
             // Переходим к следующему этапу
             window.location.href = 'menu.html';
+        }
+
+        // Возврат на главную страницу
+        function goBack() {
+            window.location.href = 'index.html';
         }
 
         // Сброс всех сохранений и возврат на первую страницу
