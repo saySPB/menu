@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+        .column {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .column h3 {
+            margin-top: 0;
+        }
+        .checkbox {
+            margin-right: 10px;
+        }
+        .add-column, .remove-column {
+            margin: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .editable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Заказы</h1>
+    <div class="container" id="columns-container">
+        <!-- Пример колонки -->
+        <div class="column">
+            <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Закуска: РЫБНАЯ / МЯСНАЯ</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячее: КУРА / МЯСО / РЫБА</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Десерт: ДА / НЕТ</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Аперитив: Вода в/г / с/г / кода / спрайт / явложо / апельсин / томат / + лимон / специи / лёд</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Алкоголь: + лёд ИгРИСТОЕ / БЕЛОЕ / КРАСНОЕ / ВИСКИ / ВОДКА / КОНЬЯК</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячие напитки: Чай Черный / зеленый / кофе / + лимон / молоко</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Будить / не будить</span></label><br>
+            <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Сразу / Полюзие</span></label><br>
+        </div>
+    </div>
+    <button class="add-column" onclick="addColumn()">Добавить колонку</button>
+    <button class="remove-column" onclick="removeColumn()">Удалить колонку</button>
+
+    <script>
+        function addColumn() {
+            const container = document.getElementById('columns-container');
+            const newColumn = document.createElement('div');
+            newColumn.className = 'column';
+            newColumn.innerHTML = `
+                <h3 class="editable" contenteditable="true">Место: ЗГ</h3>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Закуска: РЫБНАЯ / МЯСНАЯ</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячее: КУРА / МЯСО / РЫБА</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Десерт: ДА / НЕТ</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Аперитив: Вода в/г / с/г / кода / спрайт / явложо / апельсин / томат / + лимон / специи / лёд</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Алкоголь: + лёд ИгРИСТОЕ / БЕЛОЕ / КРАСНОЕ / ВИСКИ / ВОДКА / КОНЬЯК</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Горячие напитки: Чай Черный / зеленый / кофе / + лимон / молоко</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Будить / не будить</span></label><br>
+                <label><input type="checkbox" class="checkbox"> <span class="editable" contenteditable="true">Сразу / Полюзие</span></label><br>
+            `;
+            container.appendChild(newColumn);
+        }
+
+        function removeColumn() {
+            const container = document.getElementById('columns-container');
+            if (container.lastChild) {
+                container.removeChild(container.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
