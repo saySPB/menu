@@ -51,6 +51,10 @@
             background: #4a90e2;
             color: white;
         }
+        .saved-seat {
+            background: #4CAF50; /* Зеленый цвет для сохраненных мест */
+            color: white;
+        }
         .buttons {
             text-align: center;
             margin: 20px 0;
@@ -101,6 +105,18 @@
         const nextButton = document.getElementById('next-button');
 
         let selectedSeats = [];
+
+        // Проверяем, есть ли сохраненные места
+        const savedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+        savedSeats.forEach(seat => {
+            const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
+            if (savedMenu.fish || savedMenu.meat || savedMenu.dessert || savedMenu.alcohol || savedMenu.tea || savedMenu.coffee) {
+                const seatElement = leftColumn.querySelector(`[data-seat="${seat}"]`);
+                if (seatElement) {
+                    seatElement.classList.add('saved-seat');
+                }
+            }
+        });
 
         // Обработчик выбора места
         leftColumn.addEventListener('click', (event) => {
