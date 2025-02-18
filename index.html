@@ -59,7 +59,7 @@
             text-align: center;
             margin: 20px 0;
         }
-        .next-button {
+        .next-button, .reset-button {
             padding: 10px 20px;
             cursor: pointer;
             background: #4a90e2;
@@ -72,24 +72,102 @@
         .next-button:hover {
             background: #357abd;
         }
+        .reset-button {
+            background: #ff4d4d;
+            margin-left: 10px;
+        }
+        .reset-button:hover {
+            background: #cc0000;
+        }
+        .saved-orders {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .saved-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .saved-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background 0.3s ease;
+        }
+        .saved-button:hover {
+            background: #45a049;
+        }
+
+        /* Стили для модального окна */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #e6f7ff; /* Светлоголубой фон */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal h3 {
+            color: #4a90e2;
+            margin-top: 0;
+        }
+        .modal p {
+            margin: 5px 0;
+        }
+        .modal .yes {
+            color: #4CAF50; /* Зеленый цвет для "Да" */
+            font-weight: bold;
+        }
+        .modal .no-items {
+            color: #ff4d4d; /* Красный цвет для сообщения */
+            font-weight: bold;
+        }
+        .modal button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal button:hover {
+            background: #357abd;
+        }
     </style>
 </head>
 <body>
     <h1>Заказы</h1>
     <div class="main-container">
         <div class="left-column" id="left-column">
-            <div class="seat" data-seat="1F">1F</div>
-            <div class="seat" data-seat="1D">1D</div>
-            <div class="seat" data-seat="2F">2F</div>
-            <div class="seat" data-seat="2D">2D</div>
-            <div class="seat" data-seat="3F">3F</div>
-            <div class="seat" data-seat="3D">3D</div>
-            <div class="seat" data-seat="1C">1C</div>
             <div class="seat" data-seat="1A">1A</div>
-            <div class="seat" data-seat="2C">2C</div>
+            <div class="seat" data-seat="1C">1C</div>
+            <div class="seat" data-seat="1D">1D</div>
+            <div class="seat" data-seat="1F">1F</div>
             <div class="seat" data-seat="2A">2A</div>
-            <div class="seat" data-seat="3C">3C</div>
+            <div class="seat" data-seat="2C">2C</div>
+            <div class="seat" data-seat="2D">2D</div>
+            <div class="seat" data-seat="2F">2F</div>
             <div class="seat" data-seat="3A">3A</div>
+            <div class="seat" data-seat="3C">3C</div>
+            <div class="seat" data-seat="3D">3D</div>
+            <div class="seat" data-seat="3F">3F</div>
+
         </div>
         <div class="right-column" id="right-column">
             <!-- Выбранные места будут добавляться сюда -->
@@ -99,39 +177,71 @@
         <button class="next-button" id="next-button" onclick="nextStep()">Далее</button>
     </div>
 
+    <div class="saved-orders" id="saved-orders">
+        <h2>Сохраненные заказы</h2>
+        <div class="saved-buttons" id="saved-buttons">
+            <!-- Кнопки с сохраненными местами будут добавляться сюда -->
+        </div>
+    </div>
+
     <script>
         const leftColumn = document.getElementById('left-column');
         const rightColumn = document.getElementById('right-column');
         const nextButton = document.getElementById('next-button');
+        const savedButtonsContainer = document.getElementById('saved-buttons');
 
-        let selectedSeats = [];
+        let selectedSeats = []; // Массив для хранения текущих выбранных мест
 
-        // Проверяем, есть ли сохраненные места
-        const savedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
-        savedSeats.forEach(seat => {
-            const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
-            if (savedMenu.fish || savedMenu.meat || savedMenu.dessert || savedMenu.alcohol || savedMenu.tea || savedMenu.coffee) {
-                const seatElement = leftColumn.querySelector(`[data-seat="${seat}"]`);
-                if (seatElement) {
-                    seatElement.classList.add('saved-seat');
+
+        // Функция для загрузки сохраненных данных
+        function loadSavedSeats() {
+            const savedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+            savedSeats.forEach(seat => {
+                const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
+                if (savedMenu.fish || savedMenu.meat || savedMenu.beefSteak || savedMenu.tunaSteak || savedMenu.duck ||
+                    savedMenu.appleStrudel || savedMenu.whiteWine || savedMenu.redWine || savedMenu.sparklingWine ||
+                    savedMenu.vodka || savedMenu.cognac || savedMenu.whiskey || savedMenu.ice || savedMenu.lemon ||
+                    savedMenu.sparklingWater || savedMenu.stillWater || savedMenu.appleJuice || savedMenu.orangeJuice ||
+                    savedMenu.tomatoJuice || savedMenu.cola || savedMenu.sprite || savedMenu.iceDrink || savedMenu.lemonDrink ||
+                    savedMenu.tea || savedMenu.greentea || savedMenu.coffee || savedMenu.lemonHot || savedMenu.milk) {
+                    const seatElement = leftColumn.querySelector(`[data-seat="${seat}"]`);
+                    if (seatElement) {
+                        seatElement.classList.add('saved-seat');
+                        seatElement.textContent += ' (Сохранено)';
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Обработчик выбора места
-        leftColumn.addEventListener('click', (event) => {
-            if (event.target.classList.contains('seat')) {
-                const seat = event.target;
-                const seatNumber = seat.getAttribute('data-seat');
+        function handleSeatClick(event) {
+            const seat = event.target;
+            const seatNumber = seat.getAttribute('data-seat');
+
+            if (seat.parentElement === leftColumn) {
+                // Если место в левом столбце, переносим его в правый
                 const selectedSeat = document.createElement('div');
                 selectedSeat.className = 'seat selected-seat';
                 selectedSeat.setAttribute('data-seat', seatNumber);
                 selectedSeat.textContent = seatNumber;
                 rightColumn.appendChild(selectedSeat);
-                seat.remove();
+                seat.remove(); // Удаляем место из левой колонки
                 selectedSeats.push(seatNumber);
+            } else if (seat.parentElement === rightColumn) {
+                // Если место в правом столбце, возвращаем его в левый
+                const originalSeat = document.createElement('div');
+                originalSeat.className = 'seat';
+                originalSeat.setAttribute('data-seat', seatNumber);
+                originalSeat.textContent = seatNumber;
+                leftColumn.appendChild(originalSeat);
+                seat.remove(); // Удаляем место из правой колонки
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
             }
-        });
+        }
+
+        // Добавляем обработчик клика на места
+        leftColumn.addEventListener('click', handleSeatClick);
+        rightColumn.addEventListener('click', handleSeatClick);
 
         // Переход к следующему этапу
         function nextStep() {
@@ -140,10 +250,116 @@
                 return;
             }
             // Сохраняем выбранные места в localStorage
-            localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+            const savedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+            const updatedSeats = [...new Set([...savedSeats, ...selectedSeats])]; // Объединяем старые и новые места без дубликатов
+            localStorage.setItem('selectedSeats', JSON.stringify(updatedSeats));
             // Переходим к следующему этапу
             window.location.href = 'edit.html';
         }
+
+        // Функция для отображения кнопок с сохраненными местами
+
+        // Функция для отображения сохраненных заказов
+        function displaySavedOrders() {
+            savedButtonsContainer.innerHTML = ''; // Очищаем контейнер
+            const savedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
+
+            savedSeats.forEach(seat => {
+                const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
+                if (savedMenu.fish || savedMenu.meat || savedMenu.beefSteak || savedMenu.tunaSteak || savedMenu.duck ||
+                    savedMenu.appleStrudel || savedMenu.whiteWine || savedMenu.redWine || savedMenu.sparklingWine ||
+                    savedMenu.vodka || savedMenu.cognac || savedMenu.whiskey || savedMenu.ice || savedMenu.lemon ||
+                    savedMenu.sparklingWater || savedMenu.stillWater || savedMenu.appleJuice || savedMenu.orangeJuice ||
+                    savedMenu.tomatoJuice || savedMenu.cola || savedMenu.sprite || savedMenu.iceDrink || savedMenu.lemonDrink ||
+                    savedMenu.tea || savedMenu.greentea || savedMenu.coffee || savedMenu.lemonHot || savedMenu.milk) {
+                    const button = document.createElement('button');
+                    button.className = 'saved-button';
+                    button.textContent = seat;
+                    button.addEventListener('click', () => viewSavedMenu(seat));
+                    savedButtonsContainer.appendChild(button);
+                }
+            });
+        }
+
+        // Функция для просмотра сохраненного меню
+        function viewSavedMenu(seat) {
+            const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
+
+            // Создаем HTML-строку для отображения меню
+            let menuDetails = `<h3>Меню для места ${seat}</h3>`;
+
+            // Фильтруем и добавляем только те пункты, где значение "Да"
+            if (savedMenu.fish) menuDetails += `<p>Рыбная: <span class="yes">Да</span></p>`;
+            if (savedMenu.meat) menuDetails += `<p>Мясная: <span class="yes">Да</span></p>`;
+            if (savedMenu.beefSteak) menuDetails += `<p>Бифштекс: <span class="yes">Да</span></p>`;
+            if (savedMenu.tunaSteak) menuDetails += `<p>Стейк из тунца: <span class="yes">Да</span></p>`;
+            if (savedMenu.duck) menuDetails += `<p>Утка: <span class="yes">Да</span></p>`;
+            if (savedMenu.appleStrudel) menuDetails += `<p>Яблочный штрудель: <span class="yes">Да</span></p>`;
+            if (savedMenu.whiteWine) menuDetails += `<p>Белое вино: <span class="yes">Да</span></p>`;
+            if (savedMenu.redWine) menuDetails += `<p>Красное вино: <span class="yes">Да</span></p>`;
+            if (savedMenu.sparklingWine) menuDetails += `<p>Игристое вино: <span class="yes">Да</span></p>`;
+            if (savedMenu.vodka) menuDetails += `<p>Водка: <span class="yes">Да</span></p>`;
+            if (savedMenu.cognac) menuDetails += `<p>Коньяк: <span class="yes">Да</span></p>`;
+            if (savedMenu.whiskey) menuDetails += `<p>Виски: <span class="yes">Да</span></p>`;
+            if (savedMenu.ice) menuDetails += `<p>Лед: <span class="yes">Да</span></p>`;
+            if (savedMenu.lemon) menuDetails += `<p>Лимон: <span class="yes">Да</span></p>`;
+            if (savedMenu.sparklingWater) menuDetails += `<p>Газированная вода: <span class="yes">Да</span></p>`;
+            if (savedMenu.stillWater) menuDetails += `<p>Негазированная вода: <span class="yes">Да</span></p>`;
+            if (savedMenu.appleJuice) menuDetails += `<p>Яблочный сок: <span class="yes">Да</span></p>`;
+            if (savedMenu.orangeJuice) menuDetails += `<p>Апельсиновый сок: <span class="yes">Да</span></p>`;
+            if (savedMenu.tomatoJuice) menuDetails += `<p>Томатный сок: <span class="yes">Да</span></p>`;
+            if (savedMenu.cola) menuDetails += `<p>Кола: <span class="yes">Да</span></p>`;
+            if (savedMenu.sprite) menuDetails += `<p>Спрайт: <span class="yes">Да</span></p>`;
+            if (savedMenu.iceDrink) menuDetails += `<p>Лед для напитков: <span class="yes">Да</span></p>`;
+            if (savedMenu.lemonDrink) menuDetails += `<p>Лимон для напитков: <span class="yes">Да</span></p>`;
+            if (savedMenu.tea) menuDetails += `<p>Черный чай: <span class="yes">Да</span></p>`;
+            if (savedMenu.greentea) menuDetails += `<p>Зеленый чай: <span class="yes">Да</span></p>`; 
+            if (savedMenu.coffee) menuDetails += `<p>Кофе: <span class="yes">Да</span></p>`;
+            if (savedMenu.lemonHot) menuDetails += `<p>Лимон для горячих напитков: <span class="yes">Да</span></p>`;
+            if (savedMenu.milk) menuDetails += `<p>Молоко: <span class="yes">Да</span></p>`;
+
+            // Если нет выбранных пунктов, показываем сообщение
+            if (menuDetails === `<h3>Меню для места ${seat}</h3>`) {
+                menuDetails += `<p class="no-items">Нет выбранных пунктов.</p>`;
+            }
+
+            // Создаем модальное окно для отображения меню
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = menuDetails;
+
+            // Добавляем кнопку закрытия
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'Закрыть';
+            closeButton.onclick = () => document.body.removeChild(modal);
+            modal.appendChild(closeButton);
+
+            // Добавляем модальное окно на страницу
+            document.body.appendChild(modal);
+        }
+
+        // Функция для сброса выбора
+        function resetSelection() {
+            if (confirm('Вы уверены, что хотите сбросить текущий выбор? Это действие нельзя отменить.')) {
+                // Очищаем правую колонку
+                rightColumn.innerHTML = '';
+                // Возвращаем все места в левую колонку
+                selectedSeats.forEach(seatNumber => {
+                    const seatElement = document.createElement('div');
+                    seatElement.className = 'seat';
+                    seatElement.setAttribute('data-seat', seatNumber);
+                    seatElement.textContent = seatNumber;
+                    leftColumn.appendChild(seatElement);
+                });
+                // Очищаем массив текущих выбранных мест
+                selectedSeats = [];
+            }
+        }
+
+        // Загружаем сохраненные места при загрузке страницы
+        loadSavedSeats();
+        // Отображаем сохраненные заказы при загрузке страницы
+        displaySavedOrders();
     </script>
 </body>
 </html>

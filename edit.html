@@ -96,6 +96,18 @@
         let selectedSeats = JSON.parse(localStorage.getItem('selectedSeats')) || [];
         let currentSeat = null;
 
+        // Функция для проверки, есть ли сохраненные данные для места
+        function isMenuSaved(savedMenu) {
+            return (
+                savedMenu.fish || savedMenu.meat || savedMenu.beefSteak || savedMenu.tunaSteak || savedMenu.duck ||
+                savedMenu.appleStrudel || savedMenu.whiteWine || savedMenu.redWine || savedMenu.sparklingWine ||
+                savedMenu.vodka || savedMenu.cognac || savedMenu.whiskey || savedMenu.ice || savedMenu.lemon ||
+                savedMenu.sparklingWater || savedMenu.stillWater || savedMenu.appleJuice || savedMenu.orangeJuice ||
+                savedMenu.tomatoJuice || savedMenu.cola || savedMenu.sprite || savedMenu.iceDrink || savedMenu.lemonDrink ||
+                savedMenu.tea || savedMenu.greentea || savedMenu.coffee || savedMenu.lemonHot || savedMenu.milk
+            );
+        }
+
         // Отображение выбранных мест
         selectedSeats.forEach(seat => {
             const seatElement = document.createElement('div');
@@ -104,7 +116,9 @@
 
             // Загружаем сохраненные данные для этого места
             const savedMenu = JSON.parse(localStorage.getItem(`menu_${seat}`)) || {};
-            if (savedMenu.fish || savedMenu.meat || savedMenu.dessert || savedMenu.alcohol || savedMenu.tea || savedMenu.coffee) {
+
+            // Проверяем, есть ли сохраненные данные
+            if (isMenuSaved(savedMenu)) {
                 seatElement.textContent += ' (Сохранено)';
             }
 

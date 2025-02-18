@@ -96,17 +96,48 @@
 <body>
     <h1>Меню</h1>
     <div class="menu" id="menu">
-        <h3>Место: <span id="seat-number"></span></h3>
-        <h4>Закупка</h4>
-        <label><input type="checkbox" class="checkbox" id="fish"> Рыбная</label>
-        <label><input type="checkbox" class="checkbox" id="meat"> Мясная</label>
+        <h3>Место: <span contenteditable="true" id="seat-number"></span></h3>
+
+        <h4>Закуска</h4>
+        <label><input type="checkbox" class="checkbox" id="fish"> <span contenteditable="true">Рыбная</span></label>
+        <label><input type="checkbox" class="checkbox" id="meat"> <span contenteditable="true">Мясная</span></label>
+
         <h4>Горячее</h4>
-        <label><input type="checkbox" class="checkbox" id="dessert"> Десерт</label>
-        <h4>Аперитив</h4>
-        <label><input type="checkbox" class="checkbox" id="alcohol"> Алкоголь</label>
+        <label><input type="checkbox" class="checkbox" id="beef-steak"> <span contenteditable="true">Говяжий стейк</span></label>
+        <label><input type="checkbox" class="checkbox" id="tuna-steak"> <span contenteditable="true">Стейк из тунца</span></label>
+        <label><input type="checkbox" class="checkbox" id="duck"> <span contenteditable="true">Утка</span></label>
+
+        <h4>Десерт</h4>
+        <label><input type="checkbox" class="checkbox" id="apple-strudel"> <span contenteditable="true">Штрудель с яблоком</span></label>
+
+        <h4>Аперитив Алкоголь</h4>
+        <label><input type="checkbox" class="checkbox" id="white-wine"> <span contenteditable="true">Вино белое</span></label>
+        <label><input type="checkbox" class="checkbox" id="red-wine"> <span contenteditable="true">Вино красное</span></label>
+        <label><input type="checkbox" class="checkbox" id="sparkling-wine"> <span contenteditable="true">Игристое</span></label>
+        <label><input type="checkbox" class="checkbox" id="vodka"> <span contenteditable="true">Водка</span></label>
+        <label><input type="checkbox" class="checkbox" id="cognac"> <span contenteditable="true">Коньяк</span></label>
+        <label><input type="checkbox" class="checkbox" id="whiskey"> <span contenteditable="true">Виски</span></label>
+        <label><input type="checkbox" class="checkbox" id="ice"> <span contenteditable="true">Лед</span></label>
+        <label><input type="checkbox" class="checkbox" id="lemon"> <span contenteditable="true">Лимон</span></label>
+
+        <h4>Аперитив б/а напитки</h4>
+        <label><input type="checkbox" class="checkbox" id="sparkling-water"> <span contenteditable="true">Вода газированная</span></label>
+        <label><input type="checkbox" class="checkbox" id="still-water"> <span contenteditable="true">Вода негазированная</span></label>
+        <label><input type="checkbox" class="checkbox" id="apple-juice"> <span contenteditable="true">Сок яблочный</span></label>
+        <label><input type="checkbox" class="checkbox" id="orange-juice"> <span contenteditable="true">Сок апельсиновый</span></label>
+        <label><input type="checkbox" class="checkbox" id="tomato-juice"> <span contenteditable="true">Сок томатный</span></label>
+        <label><input type="checkbox" class="checkbox" id="cola"> <span contenteditable="true">Кола</span></label>
+        <label><input type="checkbox" class="checkbox" id="sprite"> <span contenteditable="true">Спрайт</span></label>
+        <label><input type="checkbox" class="checkbox" id="ice-drink"> <span contenteditable="true">Лед</span></label>
+        <label><input type="checkbox" class="checkbox" id="lemon-drink"> <span contenteditable="true">Лимон</span></label>
+
         <h4>Горячие напитки</h4>
-        <label><input type="checkbox" class="checkbox" id="tea"> Чай</label>
-        <label><input type="checkbox" class="checkbox" id="coffee"> Кофе</label>
+        <label><input type="checkbox" class="checkbox" id="tea"> <span contenteditable="true">Чай черный</span></label>
+        <label><input type="checkbox" class="checkbox" id="green-tea"> <span contenteditable="true">Чай  зеленый</span></label>
+
+        <label><input type="checkbox" class="checkbox" id="coffee"> <span contenteditable="true">Кофе</span></label>
+        <label><input type="checkbox" class="checkbox" id="lemon-hot"> <span contenteditable="true">Лимон</span></label>
+        <label><input type="checkbox" class="checkbox" id="milk"> <span contenteditable="true">Молоко</span></label>
     </div>
     <div class="buttons">
         <button class="save-button" id="save-button" onclick="saveChanges()">Сохранить</button>
@@ -115,12 +146,6 @@
     <script>
         const seatNumberElement = document.getElementById('seat-number');
         const saveButton = document.getElementById('save-button');
-        const fishCheckbox = document.getElementById('fish');
-        const meatCheckbox = document.getElementById('meat');
-        const dessertCheckbox = document.getElementById('dessert');
-        const alcoholCheckbox = document.getElementById('alcohol');
-        const teaCheckbox = document.getElementById('tea');
-        const coffeeCheckbox = document.getElementById('coffee');
 
         // Получаем выбранное место из localStorage
         const currentSeat = localStorage.getItem('currentSeat');
@@ -128,27 +153,81 @@
 
         // Загружаем сохраненные данные, если они есть
         const savedMenu = JSON.parse(localStorage.getItem(`menu_${currentSeat}`)) || {};
-        fishCheckbox.checked = savedMenu.fish || false;
-        meatCheckbox.checked = savedMenu.meat || false;
-        dessertCheckbox.checked = savedMenu.dessert || false;
-        alcoholCheckbox.checked = savedMenu.alcohol || false;
-        teaCheckbox.checked = savedMenu.tea || false;
-        coffeeCheckbox.checked = savedMenu.coffee || false;
+
+        // Функция для загрузки состояния чекбоксов
+        function loadCheckboxState(checkboxId, savedValue) {
+            const checkbox = document.getElementById(checkboxId);
+            if (checkbox) {
+                checkbox.checked = savedValue || false;
+            }
+        }
+
+        // Загружаем состояние всех чекбоксов
+        loadCheckboxState('fish', savedMenu.fish);
+        loadCheckboxState('meat', savedMenu.meat);
+        loadCheckboxState('beef-steak', savedMenu.beefSteak);
+        loadCheckboxState('tuna-steak', savedMenu.tunaSteak);
+        loadCheckboxState('duck', savedMenu.duck);
+        loadCheckboxState('apple-strudel', savedMenu.appleStrudel);
+        loadCheckboxState('white-wine', savedMenu.whiteWine);
+        loadCheckboxState('red-wine', savedMenu.redWine);
+        loadCheckboxState('sparkling-wine', savedMenu.sparklingWine);
+        loadCheckboxState('vodka', savedMenu.vodka);
+        loadCheckboxState('cognac', savedMenu.cognac);
+        loadCheckboxState('whiskey', savedMenu.whiskey);
+        loadCheckboxState('ice', savedMenu.ice);
+        loadCheckboxState('lemon', savedMenu.lemon);
+        loadCheckboxState('sparkling-water', savedMenu.sparklingWater);
+        loadCheckboxState('still-water', savedMenu.stillWater);
+        loadCheckboxState('apple-juice', savedMenu.appleJuice);
+        loadCheckboxState('orange-juice', savedMenu.orangeJuice);
+        loadCheckboxState('tomato-juice', savedMenu.tomatoJuice);
+        loadCheckboxState('cola', savedMenu.cola);
+        loadCheckboxState('sprite', savedMenu.sprite);
+        loadCheckboxState('ice-drink', savedMenu.iceDrink);
+        loadCheckboxState('lemon-drink', savedMenu.lemonDrink);
+        loadCheckboxState('tea', savedMenu.tea);
+        loadCheckboxState('green-tea', savedMenu.green-tea);
+        loadCheckboxState('coffee', savedMenu.coffee);
+        loadCheckboxState('lemon-hot', savedMenu.lemonHot);
+        loadCheckboxState('milk', savedMenu.milk);
 
         // Сохранение изменений
         function saveChanges() {
             const menuData = {
-                fish: fishCheckbox.checked,
-                meat: meatCheckbox.checked,
-                dessert: dessertCheckbox.checked,
-                alcohol: alcoholCheckbox.checked,
-                tea: teaCheckbox.checked,
-                coffee: coffeeCheckbox.checked,
+                fish: document.getElementById('fish').checked,
+                meat: document.getElementById('meat').checked,
+                beefSteak: document.getElementById('beef-steak').checked,
+                tunaSteak: document.getElementById('tuna-steak').checked,
+                duck: document.getElementById('duck').checked,
+                appleStrudel: document.getElementById('apple-strudel').checked,
+                whiteWine: document.getElementById('white-wine').checked,
+                redWine: document.getElementById('red-wine').checked,
+                sparklingWine: document.getElementById('sparkling-wine').checked,
+                vodka: document.getElementById('vodka').checked,
+                cognac: document.getElementById('cognac').checked,
+                whiskey: document.getElementById('whiskey').checked,
+                ice: document.getElementById('ice').checked,
+                lemon: document.getElementById('lemon').checked,
+                sparklingWater: document.getElementById('sparkling-water').checked,
+                stillWater: document.getElementById('still-water').checked,
+                appleJuice: document.getElementById('apple-juice').checked,
+                orangeJuice: document.getElementById('orange-juice').checked,
+                tomatoJuice: document.getElementById('tomato-juice').checked,
+                cola: document.getElementById('cola').checked,
+                sprite: document.getElementById('sprite').checked,
+                iceDrink: document.getElementById('ice-drink').checked,
+                lemonDrink: document.getElementById('lemon-drink').checked,
+                tea: document.getElementById('tea').checked,
+                greentea: document.getElementById('green-tea').checked,
+                coffee: document.getElementById('coffee').checked,
+                lemonHot: document.getElementById('lemon-hot').checked,
+                milk: document.getElementById('milk').checked,
             };
             // Сохраняем данные в localStorage
             localStorage.setItem(`menu_${currentSeat}`, JSON.stringify(menuData));
             alert('Изменения сохранены!');
-            // Возвращаемся к списку выбранных мест
+            // Перенаправляем на edit.html
             window.location.href = 'edit.html';
         }
     </script>
